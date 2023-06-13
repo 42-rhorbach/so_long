@@ -72,11 +72,32 @@ t_error	window_init(t_data *data)
 	return (OK);
 }
 
-int	main(void)
+t_error map_function(t_data *data, const char *map_path) // betere naam
+{
+	data->map_grid = load_map(map_path); //TODO: free dobby the house elf
+	if (data->map_grid == NULL)
+		return (set_error(E_SYS));
+	//DEBUG_print_map(data->map_grid);
+	data->height = ft_ptr_array_length((void **)data->map_grid);
+	data->width = 0;
+	if (data->height != 0)
+		data->width = ft_strlen(data->map_grid[0]);
+	if (is_valid_map(data) != OK)
+	{
+		ft_free_ptr_array((void **)data->map_grid);
+		return (get_error());
+	}
+	return (OK);
+}
+
+	//TODO: check if all `t_error` functions return set_error
+t_error	so_long(const char *map_path)
 {
 	t_data	data;
 
-	// generate_map(argv);
+	ft_bzero(&data, sizeof(data));
+	if (map_function(&data, map_path) != OK)
+		return (get_error());
 	data.mlx = NULL;
 	if (window_init(&data) != OK)
 	{
@@ -85,12 +106,30 @@ int	main(void)
 			mlx_close_window(data.mlx);
 			mlx_terminate(data.mlx); // does not free textures
 		}
+		ft_free_ptr_array((void **)data.map_grid);
+		return (get_error());
+	}
+	//build_mlx_map
+
+	mlx_loop_hook(data.mlx, &ft_hook, &data);
+	mlx_loop(data.mlx);
+	ft_free_ptr_array((void **)data.map_grid);
+	mlx_terminate(data.mlx); // does not free textures
+	return (OK);
+}
+
+int	main(int argc, char **argv)
+{
+	atexit(&leak_check);
+	if (argc != 2)
+	{
+		// print_error (); //make sensible
+		return (EXIT_FAILURE);
+	}
+	if (so_long(argv[1]) != OK)
+	{
 		print_error(get_error());
 		return (EXIT_FAILURE);
 	}
-	mlx_loop_hook(data.mlx, &ft_hook, &data);
-
-	mlx_loop(data.mlx);
-	mlx_terminate(data.mlx); // does not free textures
 	return (EXIT_SUCCESS);
 }

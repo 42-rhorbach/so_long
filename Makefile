@@ -16,6 +16,8 @@ NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g -fsanitize=address)
 OBJDIR = obj
 FILES = \
 	src/main.c			\
+	src/map/init.c		\
+	src/map/checker.c	\
 	src/error.c
 
 #########################

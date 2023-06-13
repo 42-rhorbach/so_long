@@ -6,11 +6,13 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/24 13:52:36 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/05/24 14:38:55 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/12 15:31:21 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+#include <errno.h>
+#include <stdio.h>
 
 static t_error	*get_error_ptr(void)
 {
@@ -39,13 +41,23 @@ t_error	get_error(void)
 void	print_error(t_error err)
 {
 	static const char	*error_table[] = {
-	// [E_SAMPLE_ERROR] = "Failed to parse integer.",
+	[E_NO_MAP] = "Received empty map.",
+	[E_MAP_NOT_CLOSED] = "Map is not enclosed by walls.",
+	[E_MAP_NOT_RECT] = "Map is not rectangular.",
+	[E_INCORRECT_ELEMENT] = "Unknown symbol found in map.",
+	[E_WRONG_QUANTITY] = "Too many/few exits/players/collectibles in map.",
+	[E_EXIT_UNREACHABLE] = "Player cannot reach the exit.",
+	[E_COLLECTIBLE_UNREACHABLE] = "Player cannot reach all collectables"
 	};
 
 	if (err == E_MLX)
 	{
 		ft_putstr_fd("so_long: ", STDERR_FILENO);
 		ft_putendl_fd((char *)mlx_strerror(mlx_errno), STDERR_FILENO);
+	}
+	else if (err == E_SYS)
+	{
+		perror("so_long");
 	}
 	else
 	{

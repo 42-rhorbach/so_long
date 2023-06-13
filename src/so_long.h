@@ -20,6 +20,8 @@
 // void	generate_map(char **map_file);
 
 
+char	**load_map(const char *map_path);
+t_error	is_valid_map(t_data *data);
 t_error	set_error(t_error err);
 t_error	get_error(void);
 void	print_error(t_error err);
