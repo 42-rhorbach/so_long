@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/24 13:48:19 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/05/24 17:00:00 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/13 16:51:20 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,22 @@ typedef enum e_error
 	E_COLLECTIBLE_UNREACHABLE
 }	t_error;
 
+typedef enum e_texture_index {
+	EXIT,
+	FLOOR,
+	PLAYER,
+	SHINY,
+	WALL,
+	TEXTURE_COUNT
+}	t_texture_index;
+
 typedef struct s_data
 {
 	mlx_t		*mlx;
-	mlx_image_t *image;
-	int32_t		instance_id;
+	mlx_image_t	*images[TEXTURE_COUNT];
 	char		**map_grid;
 	size_t		width;
 	size_t		height;
 }	t_data;
+
 #endif

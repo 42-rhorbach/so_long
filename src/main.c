@@ -42,34 +42,112 @@ void	ft_hook(void *param)
 
 	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(data->mlx);
-	if (mlx_is_key_down(data->mlx, MLX_KEY_UP)
-		|| mlx_is_key_down(data->mlx, MLX_KEY_W))
-		data->image->instances[data->instance_id].y -= 1;
-	if (mlx_is_key_down(data->mlx, MLX_KEY_DOWN)
-		|| mlx_is_key_down(data->mlx, MLX_KEY_S))
-		data->image->instances[data->instance_id].y += 1;
-	if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT)
-		|| mlx_is_key_down(data->mlx, MLX_KEY_A))
-		data->image->instances[data->instance_id].x -= 1;
-	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT)
-		|| mlx_is_key_down(data->mlx, MLX_KEY_D))
-		data->image->instances[data->instance_id].x += 1;
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_UP)
+	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_W))
+	// 	data->image->instances[data->instance_id].y -= 1;
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_DOWN)
+	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_S))
+	// 	data->image->instances[data->instance_id].y += 1;
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT)
+	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_A))
+	// 	data->image->instances[data->instance_id].x -= 1;
+	// if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT)
+	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_D))
+	// 	data->image->instances[data->instance_id].x += 1;
+}
+
+t_error	load_texture(t_data *data, const char *texture_path, mlx_image_t **img)
+{
+	mlx_texture_t	*texture;
+
+	texture = mlx_load_png(texture_path);
+	if (texture == NULL)
+		return (set_error(E_MLX));
+	*img = mlx_texture_to_image(data->mlx, texture);
+	mlx_delete_texture(texture);
+	if (*img == NULL)
+		return (set_error(E_MLX));
+	return (OK);
+}
+
+t_error	foo(t_data *data) // TODO: rename
+{
+	size_t			x;
+	size_t			y;
+	t_texture_index	t;
+	int32_t			instance_id;
+
+	y = 0;
+	while (y < data->height)
+	{
+		x = 0;
+		while (x < data->width)
+		{
+			instance_id = mlx_image_to_window(data->mlx, data->images[FLOOR], x * TILE_SIZE, y * TILE_SIZE);
+			if (instance_id == -1) //TODO: change the instance ID thing
+				return (set_error(E_MLX));
+			mlx_set_instance_depth(&data->images[FLOOR]->instances[instance_id], 0);
+			t = FLOOR;
+			if (data->map_grid[y][x] == 'E')
+				t = EXIT;
+			else if (data->map_grid[y][x] == 'C')
+				t = SHINY;
+			else if (data->map_grid[y][x] == 'P')
+				t = PLAYER;
+			else if (data->map_grid[y][x] == '1')
+				t = WALL;
+			if (t != FLOOR)
+			{
+				instance_id = mlx_image_to_window(data->mlx, data->images[t], x * TILE_SIZE, y * TILE_SIZE);
+				if (instance_id == -1) //TODO: change the instance ID thing
+					return (set_error(E_MLX));
+				if (t == FLOOR)
+					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 0);
+				if (t == EXIT || t == WALL || t == SHINY)
+					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 1);
+				if (t == PLAYER)
+					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 2);
+			}
+			x++;
+		}
+		y++;
+	}
+	return (OK);
 }
 
 t_error	window_init(t_data *data)
 {
 	//TODO: set dynamic window heigths and widths
-	data->mlx = mlx_init(500, 500, "so_long", false);
+	data->mlx = mlx_init(data->width * TILE_SIZE, \
+						data->height * TILE_SIZE, "so_long", false);
 	if (data->mlx == NULL)
 		return (set_error(E_MLX));
-	data->image = mlx_new_image(data->mlx, 500, 500);
-	if (data->image == NULL)
-		return (set_error(E_MLX));
-	ft_color(data->image, ft_rgba(55, 110, 165, 255));
-	data->instance_id = mlx_image_to_window(data->mlx, data->image, 0, 0);
-	if (data->instance_id == -1)
-		return (set_error(E_MLX));
+
+	if (load_texture(data, SL_TEX "exit.png", &data->images[EXIT]) != OK \
+	|| load_texture(data, SL_TEX "floor.png", &data->images[FLOOR]) != OK \
+	|| load_texture(data, SL_TEX "player.png", &data->images[PLAYER]) != OK \
+	|| load_texture(data, SL_TEX "shiny.png", &data->images[SHINY]) != OK \
+	|| load_texture(data, SL_TEX "wall.png", &data->images[WALL]) != OK)
+		return (get_error());
+	if (foo(data) != OK)
+		return (get_error());
 	return (OK);
+}
+
+void	leak_check(void)
+{
+	system("leaks -q so_long");
+}
+
+#  include <stdio.h>
+void DEBUG_print_map(char **map_grid)
+{
+	printf("MAP ---\n");
+	(void)map_grid;
+	for (int y = 0; map_grid[y] != NULL; y++) {
+		printf("%s\n", map_grid[y]);
+		// printf("a\n");
+	}
 }
 
 t_error map_function(t_data *data, const char *map_path) // betere naam
