@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:04 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/12 16:57:34 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/13 17:51:37 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@ static t_list	*get_map_lines(int map_fd)
 {
 	t_list	*head;
 	char	*new_line;
-	int		i;
 
-	i = 0;
+	head = NULL;
 	while (true)
 	{
 		new_line = get_next_line(map_fd);
