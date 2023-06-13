@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:09 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/13 17:05:11 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/13 18:14:27 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ void	move_player(t_data *data, int dx, int dy)
 			i++;
 		}
 		data->map_grid[ty][tx] = '0';
+		i = 0;
+		while (i < data->images[SHINY]->count \
+		&& data->images[SHINY]->instances[i].enabled == false)
+			i++;
+		if (i == data->images[SHINY]->count)
+			data->images[HATCH]->enabled = false;
 	}
 	if (data->map_grid[ty][tx] == 'E')
 	{
@@ -139,8 +145,15 @@ t_error	generate_map(t_data *data) // TODO: rename
 					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 0);
 				if (t == EXIT || t == WALL || t == SHINY)
 					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 1);
+				if (t == EXIT)
+				{
+					instance_id = mlx_image_to_window(data->mlx, data->images[HATCH], x * TILE_SIZE, y * TILE_SIZE);
+					if (instance_id == -1) //TODO: change the instance ID thing
+						return (set_error(E_MLX));
+					mlx_set_instance_depth(&data->images[HATCH]->instances[instance_id], 2);
+				}
 				if (t == PLAYER)
-					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 2);
+					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 3);
 			}
 			x++;
 		}
@@ -159,6 +172,7 @@ t_error	window_init(t_data *data)
 
 	if (load_texture(data, SL_TEX "exit.png", &data->images[EXIT]) != OK \
 	|| load_texture(data, SL_TEX "floor.png", &data->images[FLOOR]) != OK \
+	|| load_texture(data, SL_TEX "hatch.png", &data->images[HATCH]) != OK \
 	|| load_texture(data, SL_TEX "player.png", &data->images[PLAYER]) != OK \
 	|| load_texture(data, SL_TEX "shiny.png", &data->images[SHINY]) != OK \
 	|| load_texture(data, SL_TEX "wall.png", &data->images[WALL]) != OK)
@@ -170,7 +184,7 @@ t_error	window_init(t_data *data)
 
 void	leak_check(void)
 {
-	system("leaks -q so_long");
+	system("leaks so_long");
 }
 
 #  include <stdio.h>

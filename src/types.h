@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/24 13:48:19 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/13 16:51:20 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/13 18:07:45 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef enum e_error
 typedef enum e_texture_index {
 	EXIT,
 	FLOOR,
+	HATCH,
 	PLAYER,
 	SHINY,
 	WALL,
