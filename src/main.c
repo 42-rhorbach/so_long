@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:09 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/13 17:01:43 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/13 17:05:11 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_error	load_texture(t_data *data, const char *texture_path, mlx_image_t **img)
 	return (OK);
 }
 
-t_error	foo(t_data *data) // TODO: rename
+t_error	generate_map(t_data *data) // TODO: rename
 {
 	size_t			x;
 	size_t			y;
@@ -128,7 +128,7 @@ t_error	window_init(t_data *data)
 	|| load_texture(data, SL_TEX "shiny.png", &data->images[SHINY]) != OK \
 	|| load_texture(data, SL_TEX "wall.png", &data->images[WALL]) != OK)
 		return (get_error());
-	if (foo(data) != OK)
+	if (generate_map(data) != OK)
 		return (get_error());
 	return (OK);
 }
@@ -149,7 +149,7 @@ void DEBUG_print_map(char **map_grid)
 	}
 }
 
-t_error map_function(t_data *data, const char *map_path) // betere naam
+t_error parse_map_file(t_data *data, const char *map_path) // betere naam
 {
 	data->map_grid = load_map(map_path); //TODO: free dobby the house elf
 	if (data->map_grid == NULL)
@@ -173,7 +173,7 @@ t_error	so_long(const char *map_path)
 	t_data	data;
 
 	ft_bzero(&data, sizeof(data));
-	if (map_function(&data, map_path) != OK)
+	if (parse_map_file(&data, map_path) != OK)
 		return (get_error());
 	data.mlx = NULL;
 	if (window_init(&data) != OK)
