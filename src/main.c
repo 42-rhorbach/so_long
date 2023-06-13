@@ -6,54 +6,53 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:09 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/05/24 17:09:33 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/13 17:01:43 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 #include <stdlib.h>
 
-int32_t	ft_rgba(int32_t r, int32_t g, int32_t b, int32_t a)
-{
-	return (r << 24 | g << 16 | b << 8 | a);
-}
+// int32_t	ft_rgba(int32_t r, int32_t g, int32_t b, int32_t a) //temp?
+// {
+// 	return (r << 24 | g << 16 | b << 8 | a);
+// }
 
-void	ft_color(mlx_image_t *image, int32_t color)
-{
-	uint32_t	x;
-	uint32_t	y;
+// void	ft_color(mlx_image_t *image, int32_t color) //temp?
+// {
+// 	uint32_t	x;
+// 	uint32_t	y;
 
-	x = 0;
-	while (x < image->width)
-	{
-		y = 0;
-		while (y < image->height)
-		{
-			mlx_put_pixel(image, x, y, color);
-			y++;
-		}
-		x++;
-	}
-}
+// 	x = 0;
+// 	while (x < image->width)
+// 	{
+// 		y = 0;
+// 		while (y < image->height)
+// 		{
+// 			mlx_put_pixel(image, x, y, color);
+// 			y++;
+// 		}
+// 		x++;
+// 	}
+// }
 
-void	ft_hook(void *param)
+void	ft_hook(mlx_key_data_t keydata, void *param)
 {
 	t_data *const	data = param;
 
-	if (mlx_is_key_down(data->mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(data->mlx);
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_UP)
-	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_W))
-	// 	data->image->instances[data->instance_id].y -= 1;
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_DOWN)
-	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_S))
-	// 	data->image->instances[data->instance_id].y += 1;
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT)
-	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_A))
-	// 	data->image->instances[data->instance_id].x -= 1;
-	// if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT)
-	// 	|| mlx_is_key_down(data->mlx, MLX_KEY_D))
-	// 	data->image->instances[data->instance_id].x += 1;
+	if (keydata.action == MLX_PRESS)
+	{
+		if (keydata.key == MLX_KEY_ESCAPE)
+			mlx_close_window(data->mlx);
+		if (keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W)
+			data->images[PLAYER]->instances[0].y -= TILE_SIZE;
+		if (keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S)
+			data->images[PLAYER]->instances[0].y += TILE_SIZE;
+		if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)
+			data->images[PLAYER]->instances[0].x -= TILE_SIZE;
+		if (keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D)
+			data->images[PLAYER]->instances[0].x += TILE_SIZE;
+	}
 }
 
 t_error	load_texture(t_data *data, const char *texture_path, mlx_image_t **img)
@@ -189,7 +188,8 @@ t_error	so_long(const char *map_path)
 	}
 	//build_mlx_map
 
-	mlx_loop_hook(data.mlx, &ft_hook, &data);
+	// mlx_loop_hook(data.mlx, &ft_hook, &data);
+	mlx_key_hook(data.mlx, &ft_hook, &data);
 	mlx_loop(data.mlx);
 	ft_free_ptr_array((void **)data.map_grid);
 	mlx_terminate(data.mlx); // does not free textures
