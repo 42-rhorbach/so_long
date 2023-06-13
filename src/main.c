@@ -36,6 +36,41 @@
 // 	}
 // }
 
+void	move_player(t_data *data, int dx, int dy)
+{
+	const int	tx = data->px + dx;
+	const int	ty = data->py + dy;
+	int			i;
+
+	if (data->map_grid[ty][tx] == '1')
+		return ;
+	if (data->map_grid[ty][tx] == 'C')
+	{
+		i = 0;
+		while (i < data->images[SHINY]->count)
+		{
+			if (data->images[SHINY]->instances[i].x / TILE_SIZE == tx \
+			&& data->images[SHINY]->instances[i].y / TILE_SIZE == ty)
+				data->images[SHINY]->instances[i].enabled = false;
+			i++;
+		}
+		data->map_grid[ty][tx] = '0';
+	}
+	if (data->map_grid[ty][tx] == 'E')
+	{
+		i = 0;
+		while (i < data->images[SHINY]->count \
+		&& data->images[SHINY]->instances[i].enabled == false)
+			i++;
+		if (i == data->images[SHINY]->count)
+			mlx_close_window(data->mlx);
+	}
+	data->px = tx;
+	data->py = ty;
+	data->images[PLAYER]->instances[0].x = data->px * TILE_SIZE;
+	data->images[PLAYER]->instances[0].y = data->py * TILE_SIZE;
+}
+
 void	ft_hook(mlx_key_data_t keydata, void *param)
 {
 	t_data *const	data = param;
@@ -45,13 +80,13 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 		if (keydata.key == MLX_KEY_ESCAPE)
 			mlx_close_window(data->mlx);
 		if (keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W)
-			data->images[PLAYER]->instances[0].y -= TILE_SIZE;
+			move_player(data, 0, -1);
 		if (keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S)
-			data->images[PLAYER]->instances[0].y += TILE_SIZE;
+			move_player(data, 0, 1);
 		if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)
-			data->images[PLAYER]->instances[0].x -= TILE_SIZE;
+			move_player(data, -1, 0);
 		if (keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D)
-			data->images[PLAYER]->instances[0].x += TILE_SIZE;
+			move_player(data, 1, 0);
 	}
 }
 
@@ -186,6 +221,8 @@ t_error	so_long(const char *map_path)
 		ft_free_ptr_array((void **)data.map_grid);
 		return (get_error());
 	}
+	data.px = data.images[PLAYER]->instances[0].x / TILE_SIZE;
+	data.py = data.images[PLAYER]->instances[0].y / TILE_SIZE;
 	//build_mlx_map
 
 	// mlx_loop_hook(data.mlx, &ft_hook, &data);

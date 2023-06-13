@@ -45,6 +45,8 @@ typedef struct s_data
 	char		**map_grid;
 	size_t		width;
 	size_t		height;
+	int			px;
+	int			py;
 }	t_data;
 
 #endif
