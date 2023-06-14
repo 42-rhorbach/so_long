@@ -75,6 +75,8 @@ void	move_player(t_data *data, int dx, int dy)
 	data->py = ty;
 	data->images[PLAYER]->instances[0].x = data->px * TILE_SIZE;
 	data->images[PLAYER]->instances[0].y = data->py * TILE_SIZE;
+	ft_putnbr_fd(++data->move_count, STDOUT_FILENO);
+	write(STDOUT_FILENO, "\n", 1);
 }
 
 void	ft_hook(mlx_key_data_t keydata, void *param)
@@ -164,12 +166,10 @@ t_error	generate_map(t_data *data) // TODO: rename
 
 t_error	window_init(t_data *data)
 {
-	//TODO: set dynamic window heigths and widths
 	data->mlx = mlx_init(data->width * TILE_SIZE, \
 						data->height * TILE_SIZE, "so_long", false);
 	if (data->mlx == NULL)
 		return (set_error(E_MLX));
-
 	if (load_texture(data, SL_TEX "exit.png", &data->images[EXIT]) != OK \
 	|| load_texture(data, SL_TEX "floor.png", &data->images[FLOOR]) != OK \
 	|| load_texture(data, SL_TEX "hatch.png", &data->images[HATCH]) != OK \
@@ -237,13 +237,10 @@ t_error	so_long(const char *map_path)
 	}
 	data.px = data.images[PLAYER]->instances[0].x / TILE_SIZE;
 	data.py = data.images[PLAYER]->instances[0].y / TILE_SIZE;
-	//build_mlx_map
-
-	// mlx_loop_hook(data.mlx, &ft_hook, &data);
 	mlx_key_hook(data.mlx, &ft_hook, &data);
 	mlx_loop(data.mlx);
 	ft_free_ptr_array((void **)data.map_grid);
-	mlx_terminate(data.mlx); // does not free textures
+	mlx_terminate(data.mlx);
 	return (OK);
 }
 

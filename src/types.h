@@ -49,6 +49,7 @@ typedef struct s_data
 	size_t		height;
 	int			px;
 	int			py;
+	int			move_count;
 }	t_data;
 
 #endif
