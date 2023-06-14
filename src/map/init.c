@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:04 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/13 17:51:37 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/14 18:09:56 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,18 @@ static t_list	*get_map_lines(int map_fd)
 {
 	t_list	*head;
 	char	*new_line;
+	t_gnl	gnl;
 
 	head = NULL;
 	while (true)
 	{
-		new_line = get_next_line(map_fd);
-		if (new_line == NULL) // maybe improve get_next_line to differentiate between error and EOF
+		gnl = get_next_line(map_fd, &new_line);
+		if (gnl == GNL_ERROR)
+		{
+			ft_lstclear(&head, &free);
+			return (NULL);
+		}
+		if (gnl == GNL_EOF)
 			break ;
 		if (new_line[ft_strlen(new_line) - 1] == '\n')
 			new_line[ft_strlen(new_line) - 1] = '\0';
@@ -67,17 +73,3 @@ char	**load_map(const char *map_path)
 	close(map_fd);
 	return (map_grid);
 }
-
-//TODO:
-// - draw map using custom textures and a pixel grid
-
-
-// //tile = 100x100
-// t_error	load_map(char **map_file)
-// {
-// 	int	map_fd;
-// 	char	map_line;
-
-
-// 	get_next_line(map_fd);
-// }
