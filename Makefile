@@ -6,7 +6,7 @@
 #    By: rhorbach <rhorbach@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/10/14 12:49:02 by rhorbach      #+#    #+#                  #
-#    Updated: 2023/06/14 19:10:35 by rhorbach      ########   odam.nl          #
+#    Updated: 2023/06/14 19:23:29 by rhorbach      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,9 @@ FILES = \
 	src/map/init.c					\
 	src/map/validate_player_path.c	\
 	src/map/validate.c				\
-	src/player_map_interaction.c	\
-	src/error.c
+	src/error.c						\
+	src/instantiate_map.c			\
+	src/player_map_interaction.c
 
 #########################
 

@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:09 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/14 19:06:02 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/14 19:22:54 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,69 +46,6 @@ t_error	load_texture(t_data *data, const char *texture_path, mlx_image_t **img)
 	return (OK);
 }
 
-t_error	create_instance(t_data *data, t_texture_index tile_type,
-						size_t x, size_t y)
-{
-	int32_t			id;
-
-	id = mlx_image_to_window(data->mlx, data->images[tile_type], \
-								x * TILE_SIZE, y * TILE_SIZE);
-	if (id == -1)
-		return (set_error(E_MLX));
-	if (tile_type == FLOOR)
-		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 0);
-	if (tile_type == WALL || tile_type == SHINY)
-		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 1);
-	if (tile_type == EXIT)
-	{
-		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 1);
-		create_instance(data, HATCH, x, y);
-	}
-	if (tile_type == HATCH)
-		mlx_set_instance_depth(&data->images[HATCH]->instances[id], 2);
-	if (tile_type == PLAYER)
-		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 3);
-	return (OK);
-}
-
-t_texture_index	get_tile_type(char c)
-{
-	if (c == 'E')
-		return (EXIT);
-	else if (c == 'C')
-		return (SHINY);
-	else if (c == 'P')
-		return (PLAYER);
-	else if (c == '1')
-		return (WALL);
-	return (FLOOR);
-}
-
-t_error	generate_map(t_data *data) // TODO: rename / too long
-{
-	size_t			x;
-	size_t			y;
-	t_texture_index	tile_type;
-
-	y = 0;
-	while (y < data->height)
-	{
-		x = 0;
-		while (x < data->width)
-		{
-			if (create_instance(data, FLOOR, x, y) != OK)
-				return (get_error());
-			tile_type = get_tile_type(data->map_grid[y][x]);
-			if (tile_type != FLOOR)
-				if (create_instance(data, tile_type, x, y) != OK)
-					return (get_error());
-			x++;
-		}
-		y++;
-	}
-	return (OK);
-}
-
 t_error	window_init(t_data *data)
 {
 	data->mlx = mlx_init(data->width * TILE_SIZE, \
@@ -122,7 +59,7 @@ t_error	window_init(t_data *data)
 	|| load_texture(data, SL_TEX "shiny.png", &data->images[SHINY]) != OK \
 	|| load_texture(data, SL_TEX "wall.png", &data->images[WALL]) != OK)
 		return (get_error());
-	if (generate_map(data) != OK)
+	if (instantiate_map(data) != OK)
 		return (get_error());
 	return (OK);
 }
