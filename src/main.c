@@ -112,12 +112,49 @@ t_error	load_texture(t_data *data, const char *texture_path, mlx_image_t **img)
 	return (OK);
 }
 
-t_error	generate_map(t_data *data) // TODO: rename
+t_error	create_instance(t_data *data, t_texture_index tile_type,
+						size_t x, size_t y)
+{
+	int32_t			id;
+
+	id = mlx_image_to_window(data->mlx, data->images[tile_type], \
+								x * TILE_SIZE, y * TILE_SIZE);
+	if (id == -1)
+		return (set_error(E_MLX));
+	if (tile_type == FLOOR)
+		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 0);
+	if (tile_type == WALL || tile_type == SHINY)
+		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 1);
+	if (tile_type == EXIT)
+	{
+		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 1);
+		create_instance(data, HATCH, x, y);
+	}
+	if (tile_type == HATCH)
+		mlx_set_instance_depth(&data->images[HATCH]->instances[id], 2);
+	if (tile_type == PLAYER)
+		mlx_set_instance_depth(&data->images[tile_type]->instances[id], 3);
+	return (OK);
+}
+
+t_texture_index	get_tile_type(char c)
+{
+	if (c == 'E')
+		return (EXIT);
+	else if (c == 'C')
+		return (SHINY);
+	else if (c == 'P')
+		return (PLAYER);
+	else if (c == '1')
+		return (WALL);
+	return (FLOOR);
+}
+
+t_error	generate_map(t_data *data) // TODO: rename / too long
 {
 	size_t			x;
 	size_t			y;
-	t_texture_index	t;
-	int32_t			instance_id;
+	t_texture_index	tile_type;
 
 	y = 0;
 	while (y < data->height)
@@ -125,38 +162,12 @@ t_error	generate_map(t_data *data) // TODO: rename
 		x = 0;
 		while (x < data->width)
 		{
-			instance_id = mlx_image_to_window(data->mlx, data->images[FLOOR], x * TILE_SIZE, y * TILE_SIZE);
-			if (instance_id == -1) //TODO: change the instance ID thing
-				return (set_error(E_MLX));
-			mlx_set_instance_depth(&data->images[FLOOR]->instances[instance_id], 0);
-			t = FLOOR;
-			if (data->map_grid[y][x] == 'E')
-				t = EXIT;
-			else if (data->map_grid[y][x] == 'C')
-				t = SHINY;
-			else if (data->map_grid[y][x] == 'P')
-				t = PLAYER;
-			else if (data->map_grid[y][x] == '1')
-				t = WALL;
-			if (t != FLOOR)
-			{
-				instance_id = mlx_image_to_window(data->mlx, data->images[t], x * TILE_SIZE, y * TILE_SIZE);
-				if (instance_id == -1) //TODO: change the instance ID thing
-					return (set_error(E_MLX));
-				if (t == FLOOR)
-					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 0);
-				if (t == EXIT || t == WALL || t == SHINY)
-					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 1);
-				if (t == EXIT)
-				{
-					instance_id = mlx_image_to_window(data->mlx, data->images[HATCH], x * TILE_SIZE, y * TILE_SIZE);
-					if (instance_id == -1) //TODO: change the instance ID thing
-						return (set_error(E_MLX));
-					mlx_set_instance_depth(&data->images[HATCH]->instances[instance_id], 2);
-				}
-				if (t == PLAYER)
-					mlx_set_instance_depth(&data->images[t]->instances[instance_id], 3);
-			}
+			if (create_instance(data, FLOOR, x, y) != OK)
+				return (get_error());
+			tile_type = get_tile_type(data->map_grid[y][x]);
+			if (tile_type != FLOOR)
+				if (create_instance(data, tile_type, x, y) != OK)
+					return (get_error());
 			x++;
 		}
 		y++;
