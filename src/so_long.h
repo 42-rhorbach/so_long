@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:29:48 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/14 19:22:54 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/14 19:33:22 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ void	print_error(t_error err);
 t_error	has_valid_path(t_data *data);
 void	move_player(t_data *data, int dx, int dy);
 t_error	instantiate_map(t_data *data);
+t_error	window_init(t_data *data);
 
 #endif
