@@ -6,13 +6,13 @@
 #    By: rhorbach <rhorbach@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/10/14 12:49:02 by rhorbach      #+#    #+#                  #
-#    Updated: 2023/06/13 15:00:34 by rhorbach      ########   odam.nl          #
+#    Updated: 2023/06/14 16:56:23 by rhorbach      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long
 HEADERFILES = src/so_long.h src/types.h
-NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g -fsanitize=address) -D SO_LONG_DIR='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/"' -D SL_TEX='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/textures/"'
+NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g ) -D SO_LONG_DIR='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/"' -D SL_TEX='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/textures/"'
 OBJDIR = obj
 FILES = \
 	src/main.c			\
@@ -34,7 +34,13 @@ LIBFT = ./libft/libft.a
 
 HEADERFILES += ./libft/libft.h ./MLX42/include/MLX42/MLX42.h
 LIBFLAGS =	-L$(dir $(LIBFT)) -lft		\
-			-L$(dir $(MLX42)) -lmlx42 -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
+			-L$(dir $(MLX42)) -lmlx42
+
+ifeq ($(shell uname),Linux)
+LIBFLAGS += -lglfw
+else
+LIBFLAGS += -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit
+endif
 
 #########################
 
@@ -76,7 +82,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 	@$(MAKE) -C $(dir $(LIBFT)) fclean
-	@$(MAKE) -C $(MLX42_DIR)/$(MLX42_BUILD_DIR) clean
+	rm -rf $(MLX42_DIR)/$(MLX42_BUILD_DIR)
 
 re: fclean all
 
