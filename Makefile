@@ -6,7 +6,7 @@
 #    By: rhorbach <rhorbach@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/10/14 12:49:02 by rhorbach      #+#    #+#                  #
-#    Updated: 2023/06/14 18:41:52 by rhorbach      ########   odam.nl          #
+#    Updated: 2023/06/14 19:07:03 by rhorbach      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,11 @@ HEADERFILES = src/so_long.h src/types.h
 NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g ) -D SO_LONG_DIR='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/"' -D SL_TEX='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/textures/"'
 OBJDIR = obj
 FILES = \
-	src/main.c				\
-	src/map/init.c			\
-	src/map/validate_path.c	\
-	src/map/validate.c		\
+	src/main.c						\
+	src/map/init.c					\
+	src/map/validate_path.c			\
+	src/map/validate.c				\
+	src/player_map_interaction.c	\
 	src/error.c
 
 #########################

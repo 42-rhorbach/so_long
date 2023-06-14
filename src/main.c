@@ -6,78 +6,12 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:09 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/13 18:14:27 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/14 19:06:02 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 #include <stdlib.h>
-
-// int32_t	ft_rgba(int32_t r, int32_t g, int32_t b, int32_t a) //temp?
-// {
-// 	return (r << 24 | g << 16 | b << 8 | a);
-// }
-
-// void	ft_color(mlx_image_t *image, int32_t color) //temp?
-// {
-// 	uint32_t	x;
-// 	uint32_t	y;
-
-// 	x = 0;
-// 	while (x < image->width)
-// 	{
-// 		y = 0;
-// 		while (y < image->height)
-// 		{
-// 			mlx_put_pixel(image, x, y, color);
-// 			y++;
-// 		}
-// 		x++;
-// 	}
-// }
-
-void	move_player(t_data *data, int dx, int dy)
-{
-	const int	tx = data->px + dx;
-	const int	ty = data->py + dy;
-	int			i;
-
-	if (data->map_grid[ty][tx] == '1')
-		return ;
-	if (data->map_grid[ty][tx] == 'C')
-	{
-		i = 0;
-		while (i < data->images[SHINY]->count)
-		{
-			if (data->images[SHINY]->instances[i].x / TILE_SIZE == tx \
-			&& data->images[SHINY]->instances[i].y / TILE_SIZE == ty)
-				data->images[SHINY]->instances[i].enabled = false;
-			i++;
-		}
-		data->map_grid[ty][tx] = '0';
-		i = 0;
-		while (i < data->images[SHINY]->count \
-		&& data->images[SHINY]->instances[i].enabled == false)
-			i++;
-		if (i == data->images[SHINY]->count)
-			data->images[HATCH]->enabled = false;
-	}
-	if (data->map_grid[ty][tx] == 'E')
-	{
-		i = 0;
-		while (i < data->images[SHINY]->count \
-		&& data->images[SHINY]->instances[i].enabled == false)
-			i++;
-		if (i == data->images[SHINY]->count)
-			mlx_close_window(data->mlx);
-	}
-	data->px = tx;
-	data->py = ty;
-	data->images[PLAYER]->instances[0].x = data->px * TILE_SIZE;
-	data->images[PLAYER]->instances[0].y = data->py * TILE_SIZE;
-	ft_putnbr_fd(++data->move_count, STDOUT_FILENO);
-	write(STDOUT_FILENO, "\n", 1);
-}
 
 void	ft_hook(mlx_key_data_t keydata, void *param)
 {
