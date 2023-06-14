@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/24 13:52:36 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/12 15:31:21 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/14 16:03:30 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_error	get_error(void)
 void	print_error(t_error err)
 {
 	static const char	*error_table[] = {
+	[E_ARGC] = "Argument must be a path to map of type .ber",
 	[E_NO_MAP] = "Received empty map.",
 	[E_MAP_NOT_CLOSED] = "Map is not enclosed by walls.",
 	[E_MAP_NOT_RECT] = "Map is not rectangular.",

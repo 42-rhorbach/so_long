@@ -18,6 +18,7 @@
 typedef enum e_error
 {
 	OK,
+	E_ARGC,
 	E_MLX,
 	E_SYS,
 	E_NO_MAP,

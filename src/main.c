@@ -252,7 +252,7 @@ int	main(int argc, char **argv)
 	atexit(&leak_check);
 	if (argc != 2)
 	{
-		// print_error (); //make sensible
+		print_error(E_ARGC);
 		return (EXIT_FAILURE);
 	}
 	if (so_long(argv[1]) != OK)
