@@ -32,22 +32,6 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 	}
 }
 
-void	leak_check(void)
-{
-	system("leaks so_long");
-}
-
-#  include <stdio.h>
-void DEBUG_print_map(char **map_grid)
-{
-	printf("MAP ---\n");
-	(void)map_grid;
-	for (int y = 0; map_grid[y] != NULL; y++) {
-		printf("%s\n", map_grid[y]);
-		// printf("a\n");
-	}
-}
-
 t_error parse_map_file(t_data *data, const char *map_path) // betere naam
 {
 	data->map_grid = load_map(map_path); //TODO: free dobby the house elf
@@ -94,9 +78,14 @@ t_error	so_long(const char *map_path)
 	return (OK);
 }
 
+// void	leak_check(void)
+// {
+// 	system("leaks so_long");
+// }
+	// atexit(&leak_check);
+
 int	main(int argc, char **argv)
 {
-	atexit(&leak_check);
 	if (argc != 2)
 	{
 		print_error(E_ARGC);
