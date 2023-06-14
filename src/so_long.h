@@ -36,5 +36,6 @@ t_error	is_valid_map(t_data *data);
 t_error	set_error(t_error err);
 t_error	get_error(void);
 void	print_error(t_error err);
+t_error	has_valid_path(t_data *data);
 
 #endif
