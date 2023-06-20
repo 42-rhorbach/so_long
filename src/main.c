@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:05:09 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/14 19:22:54 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/20 15:52:06 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,13 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 
 t_error	parse_map_file(t_data *data, const char *map_path)
 {
+	size_t	len;
+
+	len = ft_strlen(map_path);
+	if (len < 4)
+		return (set_error(E_EXTENSION));
+	if (ft_strncmp(&map_path[len - 4], ".ber", 5) != 0)
+		return (set_error(E_EXTENSION));
 	data->map_grid = load_map(map_path);
 	if (data->map_grid == NULL)
 		return (set_error(E_SYS));

@@ -22,6 +22,7 @@ typedef enum e_error
 	E_MLX,
 	E_SYS,
 	E_NO_MAP,
+	E_EXTENSION,
 	E_MAP_NOT_CLOSED,
 	E_MAP_NOT_RECT,
 	E_INCORRECT_ELEMENT,

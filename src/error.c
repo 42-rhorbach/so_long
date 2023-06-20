@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/24 13:52:36 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/14 16:03:30 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/20 15:49:08 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	print_error(t_error err)
 	static const char	*error_table[] = {
 	[E_ARGC] = "Argument must be a path to map of type .ber",
 	[E_NO_MAP] = "Received empty map.",
+	[E_EXTENSION] = "Map file must end in \".ber\".",
 	[E_MAP_NOT_CLOSED] = "Map is not enclosed by walls.",
 	[E_MAP_NOT_RECT] = "Map is not rectangular.",
 	[E_INCORRECT_ELEMENT] = "Unknown symbol found in map.",
@@ -57,9 +58,7 @@ void	print_error(t_error err)
 		ft_putendl_fd((char *)mlx_strerror(mlx_errno), STDERR_FILENO);
 	}
 	else if (err == E_SYS)
-	{
 		perror("so_long");
-	}
 	else
 	{
 		ft_putstr_fd("so_long: ", STDERR_FILENO);
