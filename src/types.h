@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/24 13:48:19 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/13 18:07:45 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/20 15:35:34 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ typedef enum e_texture_index {
 	WALL,
 	TEXTURE_COUNT
 }	t_texture_index;
+
+typedef struct s_flood_list {
+	struct s_flood_list	*next;
+	size_t				index;
+}	t_flood_list;
 
 typedef struct s_data
 {

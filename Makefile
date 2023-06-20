@@ -16,6 +16,7 @@ NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g -fsanitize=address) -D SO_LON
 OBJDIR = obj
 FILES = \
 	src/main.c						\
+	src/map/flood_fill.c			\
 	src/map/init.c					\
 	src/map/validate_player_path.c	\
 	src/map/validate.c				\
