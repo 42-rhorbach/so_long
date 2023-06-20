@@ -6,13 +6,13 @@
 #    By: rhorbach <rhorbach@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/10/14 12:49:02 by rhorbach      #+#    #+#                  #
-#    Updated: 2023/06/20 15:36:29 by rhorbach      ########   odam.nl          #
+#    Updated: 2023/06/20 16:20:31 by rhorbach      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long
 HEADERFILES = src/so_long.h src/types.h
-NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g -fsanitize=address) -D SO_LONG_DIR='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/"' -D SL_TEX='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/textures/"'
+NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g -fsanitize=address) -D SL_TEX='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/textures/"'
 OBJDIR = obj
 FILES = \
 	src/main.c						\
@@ -33,7 +33,7 @@ MLX42 = $(MLX42_DIR)/$(MLX42_BUILD_DIR)/libmlx42.a
 
 #########################
 
-LIBFT = ./libft/libft.a
+LIBFT = ./Libft/libft.a
 
 #########################
 
@@ -66,13 +66,15 @@ endef
 
 all: $(NAME)
 
-$(NAME): $(OBJFILES) $(LIBFT) $(MLX42)
+$(NAME): $(LIBFT) $(MLX42) $(OBJFILES)
 	$(CC) $(NORMFLAGS) $(INCLUDES) $(OBJFILES) $(LIBFLAGS) -o $(NAME)
 
 $(LIBFT):
+	@git submodule update --init --recursive $(dir $(LIBFT))
 	@$(MAKE) -C $(dir $(LIBFT))
 
 $(MLX42):
+	@git submodule update --init --recursive $(dir $(MLX42_DIR))
 	cmake -S $(MLX42_DIR) -B $(MLX42_DIR)/$(MLX42_BUILD_DIR)
 	$(MAKE) -C $(MLX42_DIR)/$(MLX42_BUILD_DIR) -j4
 

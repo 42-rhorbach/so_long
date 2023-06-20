@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/21 16:29:48 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/20 15:36:10 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/20 16:05:56 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 # include "libft.h"
 # include "types.h"
 # include "MLX42.h"
-
-# ifndef SO_LONG_DIR
-#  warning SO_LONG_DIR must be defined
-#  define SO_LONG_DIR ""
-# endif
 
 # ifndef SL_TEX
 #  warning SL_TEX must be defined (dir to so_long textures)
