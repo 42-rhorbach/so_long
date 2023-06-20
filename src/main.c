@@ -32,12 +32,11 @@ void	ft_hook(mlx_key_data_t keydata, void *param)
 	}
 }
 
-t_error parse_map_file(t_data *data, const char *map_path) // betere naam
+t_error	parse_map_file(t_data *data, const char *map_path)
 {
-	data->map_grid = load_map(map_path); //TODO: free dobby the house elf
+	data->map_grid = load_map(map_path);
 	if (data->map_grid == NULL)
 		return (set_error(E_SYS));
-	//DEBUG_print_map(data->map_grid);
 	data->height = ft_ptr_array_length((void **)data->map_grid);
 	data->width = 0;
 	if (data->height != 0)
@@ -50,7 +49,16 @@ t_error parse_map_file(t_data *data, const char *map_path) // betere naam
 	return (OK);
 }
 
-	//TODO: check if all `t_error` functions return set_error
+/**
+ * Free everything in data (does not free data itself)
+ * @param data address of bzero'd t_data struct
+*/
+void	free_data_content(t_data *data)
+{
+	if (data->map_grid != NULL)
+		ft_free_ptr_array((void **)data->map_grid);
+}
+
 t_error	so_long(const char *map_path)
 {
 	t_data	data;
@@ -64,23 +72,23 @@ t_error	so_long(const char *map_path)
 		if (data.mlx != NULL)
 		{
 			mlx_close_window(data.mlx);
-			mlx_terminate(data.mlx); // does not free textures
+			mlx_terminate(data.mlx);
 		}
-		ft_free_ptr_array((void **)data.map_grid);
+		free_data_content(&data);
 		return (get_error());
 	}
 	data.px = data.images[PLAYER]->instances[0].x / TILE_SIZE;
 	data.py = data.images[PLAYER]->instances[0].y / TILE_SIZE;
 	mlx_key_hook(data.mlx, &ft_hook, &data);
 	mlx_loop(data.mlx);
-	ft_free_ptr_array((void **)data.map_grid);
+	free_data_content(&data);
 	mlx_terminate(data.mlx);
 	return (OK);
 }
 
 // void	leak_check(void)
 // {
-// 	system("leaks so_long");
+// 	system("leaks -q so_long");
 // }
 	// atexit(&leak_check);
 

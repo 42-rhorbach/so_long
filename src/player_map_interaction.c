@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/14 19:03:29 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/14 19:05:12 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/14 19:30:31 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	collect_shiny(t_data *data, int x, int y)
 			data->images[SHINY]->instances[i].enabled = false;
 		i++;
 	}
-	data->map_grid[y][x] = '0'; // TODO: think about whether you want this or not
+	data->map_grid[y][x] = '0';
 	if (has_collected_all_shinies(data))
 		data->images[HATCH]->enabled = false;
 }

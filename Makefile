@@ -6,13 +6,13 @@
 #    By: rhorbach <rhorbach@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/10/14 12:49:02 by rhorbach      #+#    #+#                  #
-#    Updated: 2023/06/14 19:33:39 by rhorbach      ########   odam.nl          #
+#    Updated: 2023/06/20 15:36:29 by rhorbach      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long
 HEADERFILES = src/so_long.h src/types.h
-NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g ) -D SO_LONG_DIR='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/"' -D SL_TEX='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/textures/"'
+NORMFLAGS = -Wall -Wextra -Werror $(if $(DEBUG),-g -fsanitize=address) -D SO_LONG_DIR='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/"' -D SL_TEX='"$(dir $(realpath $(lastword $(MAKEFILE_LIST))))/textures/"'
 OBJDIR = obj
 FILES = \
 	src/main.c						\
