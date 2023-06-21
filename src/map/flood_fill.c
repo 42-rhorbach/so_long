@@ -6,7 +6,7 @@
 /*   By: rhorbach <rhorbach@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/20 15:34:08 by rhorbach      #+#    #+#                 */
-/*   Updated: 2023/06/20 15:36:01 by rhorbach      ########   odam.nl         */
+/*   Updated: 2023/06/21 14:57:39 by rhorbach      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ static t_error	try_add_tile(t_data *data, bool *seen, size_t index,
 
 t_error	flood_fill(size_t index, bool *seen, t_data *data)
 {
-	size_t			x;
-	size_t			y;
 	t_flood_list	*lst;
 
 	lst = NULL;
@@ -74,17 +72,19 @@ t_error	flood_fill(size_t index, bool *seen, t_data *data)
 	while (lst != NULL)
 	{
 		index = lst->index;
-		x = index % data->width;
-		y = index / data->width;
 		sl_lst_advance(&lst);
 		if (seen[index])
 			continue ;
 		seen[index] = true;
-		if (try_add_tile(data, seen, y * data->width + (x + 1), &lst) != OK \
-		|| try_add_tile(data, seen, y * data->width + (x - 1), &lst) != OK \
-		|| try_add_tile(data, seen, (y + 1) * data->width + x, &lst) != OK \
-		|| try_add_tile(data, seen, (y - 1) * data->width + x, &lst) != OK)
+		if (try_add_tile(data, seen, index + 1, &lst) != OK \
+		|| try_add_tile(data, seen, index - 1, &lst) != OK \
+		|| try_add_tile(data, seen, index + data->width, &lst) != OK \
+		|| try_add_tile(data, seen, index - data->width, &lst) != OK)
+		{
+			while (lst != NULL)
+				sl_lst_advance(&lst);
 			return (get_error());
+		}
 	}
 	return (OK);
 }
